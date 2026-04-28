@@ -14,7 +14,7 @@ app.use(express.json());
 app.get('/api/top-groups', async (req, res) => {
     try {
         // URL вашего Python сервера (используем переменную окружения)
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/top-groups`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/top-groups`;
         
         const response = await fetch(pythonServerUrl);
         const data = await response.json();
@@ -35,7 +35,7 @@ app.get('/api/top-coins/:groupId', async (req, res) => {
     try {
         const groupId = req.params.groupId;
         // URL вашего Python сервера
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/top-coins/${encodeURIComponent(groupId)}`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/top-coins/${encodeURIComponent(groupId)}`;
         
         const response = await fetch(pythonServerUrl);
         const data = await response.json();
@@ -56,7 +56,7 @@ app.get('/api/token-image/:contractAddress', async (req, res) => {
     try {
         const contractAddress = req.params.contractAddress;
         // URL вашего Python сервера
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/token-image/${encodeURIComponent(contractAddress)}`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/token-image/${encodeURIComponent(contractAddress)}`;
         
         const response = await fetch(pythonServerUrl);
         const data = await response.json();
@@ -76,7 +76,7 @@ app.get('/api/token-image/:contractAddress', async (req, res) => {
 app.get('/api/all-groups-stats', async (req, res) => {
     try {
         // URL вашего Python сервера
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/all-groups-stats`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/all-groups-stats`;
         
         const response = await fetch(pythonServerUrl);
         const data = await response.json();
@@ -96,7 +96,7 @@ app.get('/api/all-groups-stats', async (req, res) => {
 app.get('/api/shared-contracts', async (req, res) => {
     try {
         // URL вашего Python сервера
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/shared-contracts`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/shared-contracts`;
         
         console.log('Proxying shared-contracts request to:', pythonServerUrl);
         
@@ -120,7 +120,7 @@ app.get('/api/shared-contracts', async (req, res) => {
 app.get('/api/latest-records', async (req, res) => {
     try {
         // URL вашего Python сервера
-        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5000'}/api/latest-records`;
+        const pythonServerUrl = `${process.env.PYTHON_SERVER_URL || 'http://127.0.0.1:5001'}/api/latest-records`;
         
         console.log('Proxying latest-records request to:', pythonServerUrl);
         
@@ -174,5 +174,5 @@ app.listen(PORT, () => {
     console.log(`Latest records test: http://localhost:${PORT}/test-latest-records`);
     console.log(`Shared contracts API: http://localhost:${PORT}/api/shared-contracts`);
     console.log(`Latest records API: http://localhost:${PORT}/api/latest-records`);
-    console.log(`Make sure your Python server is running on http://127.0.0.1:5000`);
+    console.log(`Make sure your Python server is running on http://127.0.0.1:5001`);
 });

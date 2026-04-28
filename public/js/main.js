@@ -1020,7 +1020,7 @@ async function loadLatestCoins() {
                     <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px; opacity: 0.7;"></i>
                     <p>Failed to load latest coins</p>
                     <p style="font-size: 14px; margin-top: 10px;">${error.message}</p>
-                    <p style="font-size: 12px; margin-top: 10px; color: #888888;">Make sure your Python server is running on http://127.0.0.1:5000</p>
+                    <p style="font-size: 12px; margin-top: 10px; color: #888888;">Make sure your Python server is running on http://127.0.0.1:5001</p>
                     <button onclick="loadLatestCoins()" style="margin-top: 15px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry</button>
                 </div>
             `;
