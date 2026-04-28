@@ -10,6 +10,12 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
+// Add headers to handle mixed content
+app.use((req, res, next) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' *; img-src 'self' data: *; connect-src 'self' *;");
+    next();
+});
+
 // Proxy endpoint для Python сервера
 app.get('/api/top-groups', async (req, res) => {
     try {
