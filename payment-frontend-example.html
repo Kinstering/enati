@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Оплата подписки</title>
+    <style>
+        .payment-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .plan {
+            border: 1px solid #007bff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .plan.selected {
+            background: #e7f3ff;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-form">
+        <h2>Выберите тарифный план</h2>
+        
+        <div class="plan" data-amount="99" data-plan="basic">
+            <h3>Базовый план</h3>
+            <p><strong>99 грн/месяц</strong></p>
+            <ul>
+                <li>Доступ к premium группам</li>
+                <li>Уведомления в реальном времени</li>
+                <li>История транзакций</li>
+            </ul>
+        </div>
+        
+        <div class="plan" data-amount="199" data-plan="pro">
+            <h3>PRO план</h3>
+            <p><strong>199 грн/месяц</strong></p>
+            <ul>
+                <li>Все функции базового</li>
+                <li>API доступ</li>
+                <li>Расширенная аналитика</li>
+                <li>Приоритетная поддержка</li>
+            </ul>
+        </div>
+        
+        <div class="plan" data-amount="999" data-plan="lifetime">
+            <h3>Пожизненный</h3>
+            <p><strong>999 грн</strong></p>
+            <ul>
+                <li>Все PRO функции навсегда</li>
+                <li>Без ежемесячных платежей</li>
+                <li>Эксклюзивные фичи</li>
+            </ul>
+        </div>
+        
+        <button onclick="processPayment()" disabled>Выберите план</button>
+    </div>
+
+    <script>
+        let selectedPlan = null;
+        let selectedAmount = 0;
+
+        // Выбор плана
+        document.querySelectorAll('.plan').forEach(plan => {
+            plan.addEventListener('click', () => {
+                document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
+                plan.classList.add('selected');
+                
+                selectedPlan = plan.dataset.plan;
+                selectedAmount = plan.dataset.amount;
+                
+                document.querySelector('button').disabled = false;
+                document.querySelector('button').textContent = `Оплатить ${selectedAmount} грн`;
+            });
+        });
+
+        // Обработка платежа
+        async function processPayment() {
+            if (!selectedPlan) {
+                alert('Выберите план');
+                return;
+            }
+
+            try {
+                // Создаем платеж на сервере
+                const response = await fetch('/api/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: selectedAmount,
+                        description: `Подписка ${selectedPlan} план`,
+                        plan: selectedPlan
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Создаем и отправляем форму к LiqPay
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'https://www.liqpay.ua/api/3/checkout';
+
+                    const dataInput = document.createElement('input');
+                    dataInput.type = 'hidden';
+                    dataInput.name = 'data';
+                    dataInput.value = data.payment_data;
+
+                    const signatureInput = document.createElement('input');
+                    signatureInput.type = 'hidden';
+                    signatureInput.name = 'signature';
+                    signatureInput.value = data.signature;
+
+                    form.appendChild(dataInput);
+                    form.appendChild(signatureInput);
+                    document.body.appendChild(form);
+                    
+                    // Перенаправляем на оплату
+                    form.submit();
+                } else {
+                    alert('Ошибка создания платежа');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Ошибка соединения с сервером');
+            }
+        }
+    </script>
+</body>
+</html>
